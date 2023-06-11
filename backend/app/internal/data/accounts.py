@@ -1,5 +1,5 @@
 import json
-from backend.app.internal.data.meta import SingletonMeta
+from .meta import SingletonMeta
 
 class Accounts(metaclass=SingletonMeta):
     def populate(self, db_path):
@@ -9,6 +9,7 @@ class Accounts(metaclass=SingletonMeta):
         """
         f = open(db_path, "r")
         self.accounts = json.loads(f.read())
+        return self
 
 """
 Usage:

@@ -1,8 +1,8 @@
 import random
 import time
 import traceback
-from backend.app.internal.data.accounts import Accounts
-from backend.app.internal.data.proxy import Proxy
+from .data.accounts import Accounts
+from .data.proxy import Proxy
 import sys
 import csv
 from telethon.sync import TelegramClient
@@ -11,8 +11,9 @@ from telethon.tl.types import InputPeerEmpty, InputPeerChannel, InputPeerUser
 from telethon.errors.rpcerrorlist import PeerFloodError, UserPrivacyRestrictedError
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-accounts = Accounts()
-proxy = Proxy()
+
+accounts = Accounts().populate("C:\\Users\\Лиза\\Code\\tg-inviter\\backend\\app\\internal\\data\\accountsDB.json")
+proxy = Proxy().populate("C:\\Users\\Лиза\\Code\\tg-inviter\\backend\\app\\internal\\data\\proxyDB.json")
 users = [
     ["username", "id (int)", "access_hash (int)", "name"],
     ["username", "id", "access_hash", "name"]
@@ -30,22 +31,26 @@ with open(input_file, encoding='UTF-8') as f:
         users.append(user) """
 mode = 2
 
-def ClientConnection():
+
+def ClientConnection(accounts, proxy):
     try:
-        api_id = accounts.accounts[0][1]
-        api_hash = accounts.accounts[0][2]
-        phone = accounts.accounts[0][0]
-        proxy_ip = proxy.proxy[0][0]
-        proxy_port = proxy.proxy[0][1]
-        client = TelegramClient(phone, api_id, api_hash, proxy=(proxy_ip, proxy_port))
+        api_id = accounts.accounts["accounts"][0][1]
+        api_hash = accounts.accounts["accounts"][0][2]
+        phone = accounts.accounts["accounts"][0][0]
+        proxy_protocol = proxy.proxy["proxy"][0][0]
+        proxy_ip = proxy.proxy["proxy"][0][1]
+        proxy_port = int(proxy.proxy["proxy"][0][2])
+        client = TelegramClient(phone, api_id, api_hash)
+        """ , proxy=(proxy_protocol, proxy_ip, proxy_port) """
     except KeyError:
         print("KeyError: Check your accountsDB.json and proxyDB.json files.")
         sys.exit(1)
 
-    client.connect()
+    """ client.connect()
     if not client.is_user_authorized():
         client.send_code_request(phone)
-        client.sign_in(phone, input('[+] Enter the code: '))
+        client.sign_in(phone, input('[+] Enter the code: ')) """
+    client.start("+77711828948")
 
     client.send_message('me', 'Hello, myself!')
     return client
@@ -116,6 +121,6 @@ def InviteUsers(client, target_group_entity, users, mode):
             continue 
 
 
-client = ClientConnection()
-target_group_entity = GetTargetChat(client)
-InviteUsers(client, target_group_entity, users, mode)
+client = ClientConnection(accounts=accounts, proxy=proxy)
+""" ctarget_group_entity = GetTargetChat(client)
+InviteUsers(client, target_group_entity, users, mode) """

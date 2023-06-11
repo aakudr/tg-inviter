@@ -1,5 +1,5 @@
 import json
-from backend.app.internal.data.meta import SingletonMeta
+from .meta import SingletonMeta
 
 class Proxy(metaclass=SingletonMeta):
     def populate(self, db_path):
@@ -9,6 +9,7 @@ class Proxy(metaclass=SingletonMeta):
         """
         f = open(db_path, "r")
         self.proxy = json.loads(f.read())
+        return self
 
 
 """
