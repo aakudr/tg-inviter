@@ -85,8 +85,9 @@ def GetTargetChat(client):
     print('[+] Choose a group to add members')
     g_index = input("[+] Enter a Number : ")
 
-    g_index = 0
     target_group=groups[int(g_index)]
+
+    print(target_group.title)
     
     target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
@@ -122,5 +123,5 @@ def InviteUsers(client, target_group_entity, users, mode):
 
 
 client = ClientConnection(accounts=accounts, proxy=proxy)
-""" ctarget_group_entity = GetTargetChat(client)
-InviteUsers(client, target_group_entity, users, mode) """
+target_group_entity = GetTargetChat(client)
+"""InviteUsers(client, target_group_entity, users, mode) """
