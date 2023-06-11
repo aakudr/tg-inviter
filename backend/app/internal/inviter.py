@@ -1,3 +1,5 @@
+import random
+import time
 import traceback
 from backend.app.internal.data.accounts import Accounts
 from backend.app.internal.data.proxy import Proxy
@@ -14,24 +16,28 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 accounts = Accounts()
 proxy = Proxy()
 
+def ClientConnection():
+    try:
+        api_id = accounts.accounts[0][1]
+        api_hash = accounts.accounts[0][2]
+        phone = accounts.accounts[0][0]
+        proxy_ip = proxy.proxy[0][0]
+        proxy_port = proxy.proxy[0][1]
+        client = TelegramClient(phone, api_id, api_hash, proxy=(proxy_ip, proxy_port))
+    except KeyError:
+        print("KeyError: Check your accountsDB.json and proxyDB.json files.")
+        sys.exit(1)
 
-try:
-    api_id = Accounts.accounts[0][1]
-    api_hash = Accounts.accounts[0][2]
-    phone = Accounts.accounts[0][0]
-    proxy_ip = Proxy.proxy[0][0]
-    proxy_port = Proxy.proxy[0][1]
-    client = TelegramClient(phone, api_id, api_hash, proxy=(proxy_ip, proxy_port))
-except KeyError:
-    print("KeyError: Check your accountsDB.json and proxyDB.json files.")
-    sys.exit(1)
 
+    client.connect()
+    if not client.is_user_authorized():
+        client.send_code_request(phone)
+        client.sign_in(phone, input('[+] Enter the code: '))
 
-client.connect()
-if not client.is_user_authorized():
-    client.send_code_request(phone)
-    client.sign_in(phone, input('[+] Enter the code: '))
+    client.send_message('me', 'Hello, myself!')
+    return client
 
+client = ClientConnection()
 
 users = [
     ["username", "id (int)", "access_hash (int)", "name"],
@@ -48,6 +54,7 @@ with open(input_file, encoding='UTF-8') as f:
         user['access_hash'] = int(row[2])
         user['name'] = row[3]
         users.append(user) """
+
 
 chats = []
 last_date = None
@@ -70,46 +77,52 @@ for chat in chats:
     except:
         continue
  
-i=0
+
 """ for group in groups:
     print(gr+'['+cy+str(i)+gr+']'+cy+' - '+group.title)
     i+=1
 
 print(gr+'[+] Choose a group to add members')
 g_index = input(gr+"[+] Enter a Number : "+re)
+"""
+
+g_index = 0
 target_group=groups[int(g_index)]
  
-target_group_entity = InputPeerChannel(target_group.id,target_group.access_hash)
+target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
+""" mode = 0
 print(gr+"[1] add member by user ID\n[2] add member by username ")
 mode = int(input(gr+"Input : "+re)) 
 n = 0
 print(users)
 print('before for') """
 
+mode = 1
+n = 0
 
-""" for user in users:
+for user in users:
     n += 1
     if 1 == 1:
         time.sleep(1)
     try:
-	    print ("Adding {}".format(user['id']))
-	    if mode == 1:
-	        if user['username'] == "":
-	            continue
-	        user_to_add = client.get_input_entity(user['username'])
-	    elif mode == 2:
-	        user_to_add = InputPeerUser(user['id'], user['access_hash'])
-	    else:
-	        sys.exit(re+"[!] Invalid Mode Selected. Please Try Again.")
+        print ("Adding {}".format(user['id']))
+        if mode == 1:
+            if user['username'] == "":
+                continue
+            user_to_add = client.get_input_entity(user['username'])
+        elif mode == 2:
+            user_to_add = InputPeerUser(user['id'], user['access_hash'])
+        else:
+            sys.exit("[!] Invalid Mode Selected. Please Try Again.")
         client(InviteToChannelRequest(target_group_entity,[user_to_add]))
-        print(gr+"[+] Waiting for 10-30 Seconds...")
+        print("[+] Waiting for 10-30 Seconds...")
         time.sleep(random.randrange(10, 30))
     except PeerFloodError:
-        print(re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+        print("[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
     except UserPrivacyRestrictedError:
-        print(re+"[!] The user's privacy settings do not allow you to do this. Skipping.")
+        print("[!] The user's privacy settings do not allow you to do this. Skipping.")
     except:
         traceback.print_exc()
-        print(re+"[!] Unexpected Error")
-        continue """
+        print("[!] Unexpected Error")
+        continue 
