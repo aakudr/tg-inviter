@@ -13,6 +13,22 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 
 accounts = Accounts()
 proxy = Proxy()
+users = [
+    ["username", "id (int)", "access_hash (int)", "name"],
+    ["username", "id", "access_hash", "name"]
+]
+""" users = []
+with open(input_file, encoding='UTF-8') as f:
+    rows = csv.reader(f,delimiter=",",lineterminator="\n")
+    next(rows, None)
+    for row in rows:
+        user = {}
+        user['username'] = row[0]
+        user['id'] = int(row[1])
+        user['access_hash'] = int(row[2])
+        user['name'] = row[3]
+        users.append(user) """
+mode = 2
 
 def ClientConnection():
     try:
@@ -33,24 +49,6 @@ def ClientConnection():
 
     client.send_message('me', 'Hello, myself!')
     return client
-
-client = ClientConnection()
-
-users = [
-    ["username", "id (int)", "access_hash (int)", "name"],
-    ["username", "id", "access_hash", "name"]
-]
-""" users = []
-with open(input_file, encoding='UTF-8') as f:
-    rows = csv.reader(f,delimiter=",",lineterminator="\n")
-    next(rows, None)
-    for row in rows:
-        user = {}
-        user['username'] = row[0]
-        user['id'] = int(row[1])
-        user['access_hash'] = int(row[2])
-        user['name'] = row[3]
-        users.append(user) """
 
 def GetTargetChat(client):
     chats = []
@@ -89,8 +87,6 @@ def GetTargetChat(client):
 
     return target_group_entity
 
-target_group_entity = GetTargetChat(client)
-
 def InviteUsers(client, target_group_entity, users, mode):
     n = 0
     for user in users:
@@ -119,4 +115,7 @@ def InviteUsers(client, target_group_entity, users, mode):
             print("[!] Unexpected Error")
             continue 
 
-InviteUsers(client, target_group_entity, users, 2)
+
+client = ClientConnection()
+target_group_entity = GetTargetChat(client)
+InviteUsers(client, target_group_entity, users, mode)
