@@ -71,7 +71,7 @@ for chat in chats:
         continue
  
 i=0
-for group in groups:
+""" for group in groups:
     print(gr+'['+cy+str(i)+gr+']'+cy+' - '+group.title)
     i+=1
 
@@ -85,8 +85,10 @@ print(gr+"[1] add member by user ID\n[2] add member by username ")
 mode = int(input(gr+"Input : "+re)) 
 n = 0
 print(users)
-print('before for') 
-for user in users:
+print('before for') """
+
+
+""" for user in users:
     n += 1
     if 1 == 1:
         time.sleep(1)
@@ -110,4 +112,4 @@ for user in users:
     except:
         traceback.print_exc()
         print(re+"[!] Unexpected Error")
-        continue
+        continue """
