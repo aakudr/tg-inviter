@@ -10,3 +10,11 @@ List of dependencies for the FastAPI app
 
 - run_action_middleware: run an action
 """
+
+from typing import Generator, Annotated
+
+from fastapi import Depends, HTTPException, status
+
+from .config import Config
+
+def get_accounts() -> 
