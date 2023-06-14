@@ -14,11 +14,11 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 
 accounts = Accounts().populate("C:\\Users\\Лиза\\Code\\tg-inviter\\backend\\app\\internal\\data\\accountsDB.json")
 proxy = Proxy().populate("C:\\Users\\Лиза\\Code\\tg-inviter\\backend\\app\\internal\\data\\proxyDB.json")
-users = [
+""" users = [
     ["username", "id (int)", "access_hash (int)", "name"],
     ["username", "id", "access_hash", "name"]
 ]
-""" users = []
+ users = []
 with open(input_file, encoding='UTF-8') as f:
     rows = csv.reader(f,delimiter=",",lineterminator="\n")
     next(rows, None)
@@ -29,8 +29,21 @@ with open(input_file, encoding='UTF-8') as f:
         user['access_hash'] = int(row[2])
         user['name'] = row[3]
         users.append(user) """
-mode = 2
+mode = 1
 
+def PrepareUsers(path):
+    users = []
+    with open(path, encoding='UTF-8') as f:
+        rows = csv.reader(f,delimiter=";",lineterminator="\n")
+        next(rows, None)
+        for row in rows:
+            user = {}
+            user['username'] = row[1]
+            user['id'] = int(row[0])
+            user['access_hash'] = ""
+            user['name'] = row[2]
+            users.append(user)
+    return users[5:9]
 
 def ClientConnection(accounts, proxy):
     try:
@@ -87,7 +100,7 @@ def GetTargetChat(client):
 
     target_group=groups[int(g_index)]
 
-    print(target_group.title)
+    print(str(target_group))
     
     target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
@@ -97,10 +110,12 @@ def InviteUsers(client, target_group_entity, users, mode):
     n = 0
     for user in users:
         n += 1
+        if n > 2:
+            break
         if 1 == 1:
             time.sleep(1)
         try:
-            print ("Adding {}".format(user['id']))
+            print ("Adding {}".format(user['username']))
             if mode == 1:
                 if user['username'] == "":
                     continue
@@ -109,9 +124,15 @@ def InviteUsers(client, target_group_entity, users, mode):
                 user_to_add = InputPeerUser(user['id'], user['access_hash'])
             else:
                 sys.exit("[!] Invalid Mode Selected. Please Try Again.")
-            client(InviteToChannelRequest(target_group_entity,[user_to_add]))
-            print("[+] Waiting for 10-30 Seconds...")
-            time.sleep(random.randrange(10, 30))
+
+            print(user_to_add)
+
+            client(InviteToChannelRequest(target_group_entity, [user_to_add]))
+
+            print("[+] Waiting for 30-60 Seconds...")
+            time.sleep(random.randrange(30, 60))
+
+
         except PeerFloodError:
             print("[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
         except UserPrivacyRestrictedError:
@@ -121,7 +142,7 @@ def InviteUsers(client, target_group_entity, users, mode):
             print("[!] Unexpected Error")
             continue 
 
-
+users = PrepareUsers("C:\\Users\\Лиза\\Code\\tg-inviter\\backend\\app\\internal\\data\\users.csv")
 client = ClientConnection(accounts=accounts, proxy=proxy)
 target_group_entity = GetTargetChat(client)
-"""InviteUsers(client, target_group_entity, users, mode) """
+InviteUsers(client, target_group_entity, users, mode)

@@ -3,79 +3,146 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="tg-inviter">
 	<main>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
-		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul>
+		<section class="input">
+			<div class="title">Ввод данных</div>
+			<div class="flex flex-col justify-center w-full h-full">
+				<div class="base"><span>База</span><input type="file" name="" id=""></div>
+				<div class="accounts"><span>Аккаунты</span><input type="file" name="" id=""></div>
+				<div class="proxy"><span>Прокси</span><input type="file" name="" id=""></div>
+			</div>
+		</section>
+		<section class="inviting">
+			<div class="title">Инвайтинг</div>
+			<div class="instructions">
+				<p>Для начала работы необходимо загрузить базу, аккаунты и прокси.</p>
+				<p>После загрузки данных, необходимо выбрать тип инвайтинга и нажать на кнопку "Начать".</p>
+				<p>По мере выполнения работы, в журнале справа появится информация об успешных инвайтах и ошибках.</p>
+			</div>
+			<div class="settings">
+				<!-- Write markup for settings using checkboxes, radio buttons and inputs -->
+				<div>
+					<span class="block">Длительность задержки (сек)</span>
+					<label for="from">От</label>
+					<input type="text" name="from" id="from">
+					<label for="to">до</label>
+					<input type="text" name="to" id="to">
+				</div>
+				<div>
+					<span class="block">Количество потоков</span>
+					<input type="text" name="threads" id="threads">
+				</div>
+				<div>
+					<span class="block">Количество инвайтов на аккаунт</span>
+					<input type="text" name="invites" id="invites">
+				</div>
+				<div>
+					<input type="checkbox" name="checkbox" id="checkbox">
+					<label for="checkbox">Рандомизировать useragent</label>
+				</div>
+				<div>
+					<label class="block" for="method">Метод инвайтинга</label>
+					<input type="radio" name="method" id="radio">По имени пользователя</input>
+					<br>
+					<input type="radio" name="method" id="radio">По ID пользователя</input>
+				</div>
+			</div>
+			<button class="start">Начать Инвайтинг</button>
+		</section>
+		<section class="logging">
+			<div class="title">Журнал выполнения</div>
+			<textarea name="" id="" cols="30" rows="10"></textarea>
+		</section>
 	</main>
 </Layout>
 
 <style>
 	main {
-		margin: auto;
-		padding: 1.5rem;
-		max-width: 60ch;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		margin: 20px;
+		height: calc(100vh - 40px);
 	}
-	h1 {
-		font-size: 3rem;
-		font-weight: 800;
-		margin: 0;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
+	section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		margin: 20px;
+		height: 100%;
+		width: calc(100% / 3 - 40px);
+		border-radius: 20px;
+		overflow: hidden;
+		@apply bg-slate-500 text-white;
 	}
 	.instructions {
-		line-height: 1.6;
-		margin: 1rem 0;
-		border: 1px solid rgba(var(--accent), 25%);
-		background-color: white;
-		padding: 1rem;
-		border-radius: 0.4rem;
+		width: calc(100% - 20px);
+		margin: 10px;
+		@apply text-white;
 	}
-	.instructions code {
-		font-size: 0.875em;
+	.instructions > p {
+		margin: 10px;
+		line-height: 1.35rem;
+	}
+	.settings {
+		@apply bg-slate-400 text-white;
+		width: calc(100% - 20px);
+		border-radius: 10px;
+		margin: 20px;
+	}
+	.settings > div {
+		margin: 10px;
+	}
+	.settings > div > input[type="text"] {
+		width: 50px;
+	}
+	button.start {
+		width: calc(100% - 20px);
+		margin: 10px;
+		padding: 10px;
+		border-radius: 10px;
+		@apply bg-slate-600 text-white;
+		
+	}
+	button.start:hover {
+		@apply bg-slate-700;
+		box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.7);
+	}
+	.base, .accounts, .proxy {
+		height: 150px;
+		width: calc(100% - 20px);
+		margin: 10px;
+		@apply bg-slate-400 text-white;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+	.base span, .accounts span, .proxy span {
+		display: block;
+		@apply bg-slate-300 text-black;
+		margin-bottom: 10px;
+		padding-left: 10px;
+	}
+	.title {
+		font-size: 20px;
 		font-weight: bold;
-		background: rgba(var(--accent), 12%);
-		color: rgb(var(--accent));
-		border-radius: 4px;
-		padding: 0.3em 0.45em;
+		text-align: center;
+		line-height: 2.5rem;
+		height: 2.5rem;
+		width: 100%;
+		@apply bg-slate-300 text-black;
 	}
-	.instructions strong {
-		color: rgb(var(--accent));
+	.logging > textarea {
+		width: calc(100% - 20px);
+		height: calc(100% - 20px);
+		margin: 10px;
+		border-radius: 10px;
+		@apply bg-slate-400 text-white;
 	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 1rem;
-		padding: 0;
+	input[type="file"] {
+		width: calc(100% - 20px);
+		margin: 10px;
 	}
 </style>
